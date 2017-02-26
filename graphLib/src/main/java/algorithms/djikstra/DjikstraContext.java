@@ -1,32 +1,23 @@
-package algorithms;
+package algorithms.djikstra;
+
+import algorithms.AlgContext;
 
 import java.util.List;
 
 /**
  * Created by sfox on 2/25/17.
  */
-public class DjikstraContext<V> {
+public class DjikstraContext<V> extends AlgContext<V> {
 
-    private V value;
     private boolean visited;
     private Float shortestPath;
-
     private List<V> pathToVertex;
 
     public DjikstraContext(V value) {
-        this.value = value;
+        super(value);
         visited = false;
         shortestPath = Float.MAX_VALUE;
     }
-
-    public V getValue() {
-        return value;
-    }
-
-    public void setValue(V value) {
-        this.value = value;
-    }
-
 
     public boolean isVisited() {
         return visited;

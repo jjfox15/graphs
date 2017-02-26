@@ -1,4 +1,4 @@
-package algorithms;
+package algorithms.djikstra;
 
 import models.base.Edge;
 import models.base.Path;

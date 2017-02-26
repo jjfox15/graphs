@@ -1,5 +1,6 @@
-package algorithms;
+package algorithms.djikstra;
 
+import algorithms.ContextGraph;
 import models.graphRepresentations.DirectedGraph;
 
 /**
@@ -12,7 +13,7 @@ public class DjikstraContextGraph<V> extends ContextGraph<V, DjikstraContext<V>>
     }
 
     @Override
-    public DjikstraContext buildContext(V vertex) {
+    public DjikstraContext<V> buildContext(V vertex) {
         return new DjikstraContext<>(vertex);
     }
 }

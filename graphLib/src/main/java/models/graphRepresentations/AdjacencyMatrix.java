@@ -1,10 +1,8 @@
 package models.graphRepresentations;
 
-import models.base.CostEvaluator;
 import models.base.Edge;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -13,29 +11,30 @@ import java.util.Set;
  */
 public class AdjacencyMatrix<V> extends GraphRepresentation<V> {
 
-    private Set<V> vertices;
-    private Map<V, Map<V, Float>> adjencyMatrix;
-    private CostEvaluator<V> costEvaluator;
-
-    public AdjacencyMatrix(CostEvaluator<V> costEvaluator) {
-        this.vertices = new HashSet<>();
-        this.adjencyMatrix = new HashMap<>();
-        this.costEvaluator = costEvaluator;
+    private Map<V, Integer> vertices;
+    private Float[][] adjencyMatrix;
+    private Integer nextIdx = 0;
+    private final Integer numNodes;
+    public AdjacencyMatrix(int numNodes) {
+        this.numNodes = numNodes;
+        this.vertices = new HashMap<>();
+        this.adjencyMatrix = new Float[numNodes][numNodes];
     }
 
     @Override
     public void addVertex(V value) {
-        vertices.add(value);
+        vertices.put(value, nextIdx++);
     }
 
     @Override
     public void addEdge(V start, V end, float cost) {
-        if (vertices.contains(start) && vertices.contains(end)) {
-            if (!adjencyMatrix.containsKey(start)) {
-                adjencyMatrix.put(start, new HashMap<>());
-            }
-            adjencyMatrix.get(start).put(end, cost);
+        if (!vertices.containsKey(start)) {
+            vertices.put(start, nextIdx++);
         }
+        if (!vertices.containsKey(end)) {
+            vertices.put(end, nextIdx++);
+        }
+        adjencyMatrix[vertices.get(start)][vertices.get(end)] = cost;
     }
 
     @Override
@@ -43,36 +42,29 @@ public class AdjacencyMatrix<V> extends GraphRepresentation<V> {
         V start = edge.getStart();
         V end = edge.getEnd();
         float cost = edge.getCost();
-        if (vertices.contains(start) && vertices.contains(end)) {
-            if (!adjencyMatrix.containsKey(start)) {
-                adjencyMatrix.put(start, new HashMap<>());
-            }
-            adjencyMatrix.get(start).put(end, cost);
+        addEdge(start, end, cost);
+    }
+
+    public void setValue(int start, int end, Float cost) {
+        if (start < numNodes && end < numNodes) {
+            adjencyMatrix[start][end] = cost;
         }
     }
 
-    public Map<V, Map<V, Float>> getAdjencyMatrix() {
+    public Float getValue(int start, int end) {
+        if (start < numNodes && end < numNodes) {
+            return adjencyMatrix[start][end];
+        } else {
+            return null;
+        }
+    }
+
+
+    public Float[][] getAdjencyMatrix() {
         return adjencyMatrix;
     }
 
-    public void setAdjencyMatrix(Map<V, Map<V, Float>> adjencyMatrix) {
-        this.adjencyMatrix = adjencyMatrix;
-    }
-
-    public CostEvaluator<V> getCostEvaluator() {
-        return costEvaluator;
-    }
-
-    public void setCostEvaluator(CostEvaluator<V> costEvaluator) {
-        this.costEvaluator = costEvaluator;
-    }
-
     public Set<V> getVertices() {
-        return vertices;
+        return vertices.keySet();
     }
-
-    public void setVertices(Set<V> vertices) {
-        this.vertices = vertices;
-    }
-
 }

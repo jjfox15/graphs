@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * Created by sfox on 2/25/17.
  */
-public abstract class ContextGraph<V, C extends DjikstraContext<V>> {
+public abstract class ContextGraph<V, C extends AlgContext<V>> {
 
     private Map<V, C> contextMap;
 
@@ -24,7 +24,7 @@ public abstract class ContextGraph<V, C extends DjikstraContext<V>> {
         contextMap.put(value, context);
     }
 
-    public DjikstraContext getContext(V value) {
+    public C getContext(V value) {
         return contextMap.get(value);
     }
 

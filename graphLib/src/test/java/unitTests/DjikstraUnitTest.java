@@ -1,6 +1,6 @@
 package unitTests;
 
-import algorithms.Djikstra;
+import algorithms.djikstra.Djikstra;
 import models.base.Path;
 import models.base.PathsFromSource;
 import models.graphRepresentations.DirectedGraph;
