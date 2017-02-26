@@ -18,12 +18,12 @@ import java.util.Set;
  */
 public class Djikstra<V> {
 
-    private ContextGraph<V> contextGraph;
     private DirectedGraph<V> graph;
+    private DjikstraContextGraph<V> contextGraph;
     private PriorityQueue<DjikstraContext<V>> priorityQueue;
 
     public Djikstra(DirectedGraph<V> graph) {
-        this.contextGraph = new ContextGraph<>(graph);
+        this.contextGraph = new DjikstraContextGraph<>(graph);
         this.graph = graph;
         Comparator<DjikstraContext<V>> comparator = new Comparator<DjikstraContext<V>>() {
             @Override

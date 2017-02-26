@@ -11,7 +11,7 @@ import java.util.Set;
 /**
  * Created by sfox on 2/25/17.
  */
-public class AdjacencyMatrix<V> implements GraphRepresentation<V> {
+public class AdjacencyMatrix<V> extends GraphRepresentation<V> {
 
     private Set<V> vertices;
     private Map<V, Map<V, Float>> adjencyMatrix;
@@ -29,9 +29,8 @@ public class AdjacencyMatrix<V> implements GraphRepresentation<V> {
     }
 
     @Override
-    public void addEdge(V start, V end) {
+    public void addEdge(V start, V end, float cost) {
         if (vertices.contains(start) && vertices.contains(end)) {
-            float cost = costEvaluator.evaluate(start, end);
             if (!adjencyMatrix.containsKey(start)) {
                 adjencyMatrix.put(start, new HashMap<>());
             }

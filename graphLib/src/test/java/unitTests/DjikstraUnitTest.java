@@ -1,11 +1,14 @@
-package algorithms;
+package unitTests;
 
+import algorithms.Djikstra;
 import models.base.Path;
 import models.base.PathsFromSource;
 import models.graphRepresentations.DirectedGraph;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+
+import java.util.Map;
 
 /**
  * Created by sfox on 2/25/17.
@@ -25,6 +28,16 @@ public class DjikstraUnitTest {
         graph.addEdge("b", "c");
         graph.addEdge("c", "d");
         graph.addEdge("b", "d");
+
+        DirectedGraph<String> weightedGraph = new DirectedGraph<>();
+        weightedGraph.addVertex("a");
+        weightedGraph.addVertex("b");
+        weightedGraph.addVertex("c");
+        weightedGraph.addVertex("d");
+
+        weightedGraph.addEdge("a", "b", 10f);
+        weightedGraph.addEdge("a", "c");
+        weightedGraph.addEdge("c", "b");
 
         return new Object[][] {
 
@@ -51,7 +64,15 @@ public class DjikstraUnitTest {
                         2f
                 },
 
-                // weighted directed graphts
+                // weighted directed graphs
+                {
+                        "find node along longer node path which is shorter in terms of cost ",
+                        weightedGraph,
+                        "a",
+                        "b",
+                        2f
+                },
+
         };
     }
 
@@ -79,8 +100,12 @@ public class DjikstraUnitTest {
         Assert.assertEquals(cost, expectedShortestPath, "Test: " + msg + " failed. Found incorrect shortest path. Expected: "
                 + expectedShortestPath + " but found: " + cost);
 
-        for (Path path: pathsFromSource.values()) {
-            System.out.println("Found path: " + path);
+        for (Map.Entry<String, Path<String>> pathEntry: pathsFromSource.entrySet()) {
+            if (pathEntry.getValue().getPath() != null) {
+                System.out.println("Found path: " + pathEntry.getValue());
+            } else {
+                System.out.println("No path found for target: " + pathEntry.getKey());
+            }
         }
         System.out.println();
     }

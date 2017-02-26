@@ -10,7 +10,7 @@ import java.util.Set;
 /**
  * Created by sfox on 2/25/17.
  */
-public class DirectedGraph<V> implements GraphRepresentation<V> {
+public class DirectedGraph<V> extends GraphRepresentation<V> {
 
     private Map<V, Node<V>> graphNodes;
 
@@ -25,8 +25,8 @@ public class DirectedGraph<V> implements GraphRepresentation<V> {
     }
 
     @Override
-    public void addEdge(V start, V end) {
-        Edge<V> newEdge = new Edge<>(start, end);
+    public void addEdge(V start, V end, float cost) {
+        Edge<V> newEdge = new Edge<>(start, end, cost);
         if (!graphNodes.containsKey(start)) {
             addVertex(start);
         }
