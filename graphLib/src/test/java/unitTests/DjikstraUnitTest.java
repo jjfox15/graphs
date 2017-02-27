@@ -77,7 +77,7 @@ public class DjikstraUnitTest {
     }
 
 
-    @Test(dataProvider = "djikstraProvider")
+    @Test(dataProvider = "djikstraProvider", invocationCount = 20)
     public void getPathTest(String msg, DirectedGraph<String> graph, String source, String target, Float expectedShortestPath) {
         Djikstra<String> djikstraAlg = new Djikstra<>(graph);
 
@@ -88,26 +88,4 @@ public class DjikstraUnitTest {
         System.out.println("Found path: " + actualShortestPath);
         System.out.println();
     }
-
-
-    @Test(dataProvider = "djikstraProvider")
-    public void getPathsTest(String msg, DirectedGraph<String> graph, String source, String target, Float expectedShortestPath) {
-        Djikstra<String> djikstraAlg = new Djikstra<>(graph);
-
-        PathsFromSource<String> pathsFromSource = djikstraAlg.getPaths(source);
-        Path<String> pathToTarget = pathsFromSource.getPath(target);
-        Float cost = pathToTarget.getCost();
-        Assert.assertEquals(cost, expectedShortestPath, "Test: " + msg + " failed. Found incorrect shortest path. Expected: "
-                + expectedShortestPath + " but found: " + cost);
-
-        for (Map.Entry<String, Path<String>> pathEntry: pathsFromSource.entrySet()) {
-            if (pathEntry.getValue().getPath() != null) {
-                System.out.println("Found path: " + pathEntry.getValue());
-            } else {
-                System.out.println("No path found for target: " + pathEntry.getKey());
-            }
-        }
-        System.out.println();
-    }
-
 }

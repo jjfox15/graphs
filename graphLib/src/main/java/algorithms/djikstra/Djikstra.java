@@ -9,7 +9,9 @@ import models.base.Node;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Set;
 
@@ -21,8 +23,13 @@ public class Djikstra<V> {
     private DirectedGraph<V> graph;
     private DjikstraContextGraph<V> contextGraph;
     private PriorityQueue<DjikstraContext<V>> priorityQueue;
+    private IDjikstraContraint<V> constrainer;
 
     public Djikstra(DirectedGraph<V> graph) {
+        this(graph, new DefaultDjikstraConstraint<>());
+    }
+
+    public Djikstra(DirectedGraph<V> graph, IDjikstraContraint<V> constrainer) {
         this.contextGraph = new DjikstraContextGraph<>(graph);
         this.graph = graph;
         Comparator<DjikstraContext<V>> comparator = new Comparator<DjikstraContext<V>>() {
@@ -32,6 +39,7 @@ public class Djikstra<V> {
             }
         };
         this.priorityQueue = new PriorityQueue<>(comparator);
+        this.constrainer = constrainer;
     }
 
     public Path<V> getShortestPath(V source, V target) {
@@ -68,29 +76,31 @@ public class Djikstra<V> {
             V value = top.getValue();
             Node graphNode = graph.getVertex(value);
 
-            if (top.isVisited()) {
-                continue;
-            } else if (null != target && top.getValue().equals(target)) {
+            if (null != target && top.getValue().equals(target)) {
                 break;
             }
             top.setVisited(true);
+            contextGraph.setContext(value, top);
 
             Set<Edge<V>> edges = graphNode.getPathsToNeighbors();
             for (Edge<V> edge : edges) {
 
                 DjikstraContext<V> neighborContext = contextGraph.getContext(edge.getEnd());
 
-                Float pathToNeighborCost = top.getShortestPath() + edge.getCost();
-                if (pathToNeighborCost < neighborContext.getShortestPath()) {
-                    List<V> pathToNeighbor = new ArrayList(top.getPathToVertex());
-                    V neighborValue = neighborContext.getValue();
+                if(constrainer.meetsConstraint(top, neighborContext, edge)) {
+                    Float pathToNeighborCost = constrainer.getShortestPathToNeighbor(top, neighborContext, edge);
+                    if (pathToNeighborCost < neighborContext.getShortestPath()) {
+                        List<V> pathToNeighbor = new ArrayList(top.getPathToVertex());
+                        V neighborValue = neighborContext.getValue();
 
-                    pathToNeighbor.add(neighborValue);
-                    neighborContext.setShortestPath(pathToNeighborCost);
-                    neighborContext.setPathToVertex(pathToNeighbor);
+                        pathToNeighbor.add(neighborValue);
+                        neighborContext.setShortestPath(pathToNeighborCost);
+                        neighborContext.setPathToVertex(pathToNeighbor);
+                        contextGraph.setContext(neighborContext.getValue(), neighborContext);
+                        // copy object to avoid mutating objects already in the queue
+                        priorityQueue.add(new DjikstraContext<>(neighborContext));
+                    }
                 }
-                contextGraph.setContext(neighborContext.getValue(), neighborContext);
-                priorityQueue.add(neighborContext);
             }
         }
     }

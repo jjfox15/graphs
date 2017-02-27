@@ -2,6 +2,7 @@ package algorithms.djikstra;
 
 import algorithms.AlgContext;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -13,10 +14,17 @@ public class DjikstraContext<V> extends AlgContext<V> {
     private Float shortestPath;
     private List<V> pathToVertex;
 
+    public DjikstraContext(DjikstraContext<V> other) {
+        super(other);
+        this.visited = other.visited;
+        this.shortestPath = new Float(other.shortestPath);
+        this.pathToVertex = new ArrayList<>(other.pathToVertex);
+    }
+
     public DjikstraContext(V value) {
         super(value);
-        visited = false;
-        shortestPath = Float.MAX_VALUE;
+        this.visited = false;
+        this.shortestPath = Float.MAX_VALUE;
     }
 
     public boolean isVisited() {
