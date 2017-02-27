@@ -79,8 +79,9 @@ public class Djikstra<V> {
             if (null != target && top.getValue().equals(target)) {
                 break;
             }
-            top.setVisited(true);
-            contextGraph.setContext(value, top);
+
+            // set this node as visited in the context graph
+            contextGraph.getContext(value).setVisited(true);
 
             Set<Edge<V>> edges = graphNode.getPathsToNeighbors();
             for (Edge<V> edge : edges) {
