@@ -84,6 +84,8 @@ public class Djikstra<V> {
             contextGraph.getContext(value).setVisited(true);
 
             Set<Edge<V>> edges = graphNode.getPathsToNeighbors();
+
+
             for (Edge<V> edge : edges) {
 
                 DjikstraContext<V> neighborContext = contextGraph.getContext(edge.getEnd());
