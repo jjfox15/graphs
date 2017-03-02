@@ -1,4 +1,4 @@
-package problems.maxValueCostLimitProblem;
+package algorithms.lineupBuilder;
 
 import java.util.Objects;
 import java.util.UUID;
