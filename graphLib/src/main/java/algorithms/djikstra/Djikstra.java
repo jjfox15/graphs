@@ -78,6 +78,10 @@ public class Djikstra<V> {
 
             if (null != target && top.getValue().equals(target)) {
                 break;
+            } else if(constrainer.completionNode(top)) {
+                if (null != target) {
+                    constrainer.onCompletionNode(graph, top.getValue(), target);
+                }
             }
 
             // set this node as visited in the context graph
